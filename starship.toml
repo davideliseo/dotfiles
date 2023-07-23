@@ -1,0 +1,96 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Inserts a blank line between shell prompts
+add_newline = true
+
+format = """
+$username\
+$hostname\
+$shlvl\
+$kubernetes\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$hg_branch\
+$docker_context\
+$package\
+$cmake\
+$dart\
+$dotnet\
+$elixir\
+$elm\
+$erlang\
+$golang\
+$helm\
+$java\
+$julia\
+$kotlin\
+$nim\
+$nodejs\
+$ocaml\
+$perl\
+$php\
+$purescript\
+$python\
+$ruby\
+$rust\
+$scala\
+$swift\
+$terraform\
+$vagrant\
+$zig\
+$nix_shell\
+$conda\
+$memory_usage\
+$aws\
+$gcloud\
+$openstack\
+$env_var\
+$crystal\
+$custom\
+$battery\
+$cmd_duration\
+$time\
+$line_break\
+$lua\
+$jobs\
+$status\
+$shell\
+$character"""
+
+[character]
+success_symbol = "[::](bold green)"
+error_symbol = "[::](bold red)"
+vicmd_symbol = "[>>](bold green)"
+
+[username]
+style_user = "bold red"
+show_always = true
+
+[time]
+disabled = false
+style = "bold green"
+
+[directory]
+home_symbol = "~"
+read_only = " "
+style = "bold cyan"
+truncation_symbol = ""
+use_logical_path = true
+# fish_style_pwd_dir_length = 1
+
+[rust]
+symbol = "Rust "
+
+[git_commit]
+only_detached = false
+tag_disabled = false
+tag_symbol = " "
+
+# [nodejs]
+# symbol = " "
+#
+# [package]
+# symbol = " "
