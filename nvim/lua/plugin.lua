@@ -41,17 +41,20 @@ require('lazy').setup {
     end,
   },
   {
-    'williamboman/mason.nvim',
-    build = ':MasonUpdate', -- :MasonUpdate updates registry contents
-    config = function()
-      require('mason').setup()
+    'folke/which-key.nvim',
+    event = "VeryLazy",
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
     end,
   },
-  { 'folke/which-key.nvim' },
   {
-    'phaazon/hop.nvim',
-    branch = 'v2', -- Strongly recommended
+    'smoka7/hop.nvim',
+    version = '*',
     event = 'VeryLazy',
+    config = function()
+      require 'hop'.setup()
+    end,
   },
   {
     'kylechui/nvim-surround',
@@ -62,6 +65,10 @@ require('lazy').setup {
   {
     'nvim-telescope/telescope.nvim', tag = '0.1.1',
     dependencies = { 'nvim-lua/plenary.nvim' }
+  },
+  {
+    'nvim-telescope/telescope-file-browser.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' }
   },
   {
     'folke/trouble.nvim',
@@ -85,22 +92,27 @@ require('lazy').setup {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v2.x',
     dependencies = {
-      -- LSP Support
-      {'neovim/nvim-lspconfig'},             -- Required
-      {                                      -- Optional
+      {'neovim/nvim-lspconfig'},
+      {
         'williamboman/mason.nvim',
         build = function()
           pcall(vim.api.nvim_command, 'MasonUpdate')
         end,
       },
-      {'williamboman/mason-lspconfig.nvim'}, -- Optional
-
+      {'williamboman/mason-lspconfig.nvim'},
       -- Autocompletion
-      {'hrsh7th/nvim-cmp'},     -- Required
-      {'hrsh7th/cmp-nvim-lsp'}, -- Required
-      {'L3MON4D3/LuaSnip'},     -- Required
+      {'hrsh7th/nvim-cmp'},
+      {'hrsh7th/cmp-nvim-lsp'},
+      {'hrsh7th/cmp-buffer'},
+      {'L3MON4D3/LuaSnip'},
     }
   },
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    opts = {} -- this is equalent to setup({}) function
+  },
+  {'windwp/nvim-ts-autotag'},
   {
     'romgrk/barbar.nvim',
     dependencies = {
@@ -121,9 +133,7 @@ require('lazy').setup {
       require('dashboard').setup {
         theme = 'hyper',
         config = {
-          week_header = {
-            enable = true,
-          },
+          header = {},
           project = {
             enable = true,
           },
@@ -158,9 +168,10 @@ require('lazy').setup {
               key = 'd',
             },
           },
-          -- footer = {
-          --   ' a ', ' b ', ' c ',
-          -- }
+          footer = {
+            '',
+            [[🌄 This time next year, you will wish you had started today.]],
+          }
         },
       }
     end,
