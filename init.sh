@@ -109,6 +109,10 @@ sudo -H pip install podman-compose
 # Reiniciar shell
 exec $SHELL
 
+# Convertir "/" en compartido
+# https://github.com/containers/buildah/issues/3726#issuecomment-1171146242
+sudo mount --make-rshared /
+
 # Iniciar nueva sesión de Tmux
 tmux new -s dev
 
