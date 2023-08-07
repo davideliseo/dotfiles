@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ################################################################################
 # Script de inicio para configurar un nuevo entorno de desarrollo.
@@ -7,45 +7,48 @@
 ################################################################################
 
 # Abortar script en caso de error
-set -eux
+set -ex
+
+xdg_config() {
+    ln -s $(pwd)/$1 $HOME/.config/$1
+}
+
+email="daviduribe998@gmail.com"
+name="David Uribe"
 
 sudo apt update && sudo apt upgrade -y
+sudo apt reinstall libc-bin
 sudo apt install curl -y
 
 #######
 # Git #
-sudo apt install git -y
+sudo apt install git gh -y
+git config --global user.email "$email"
+git config --global user.name "$name"
 # TODO: Importar configuración
 
 ########
 # Brew #
-if [[ $WSL_BREW != "off" ]]; then
-     sudo apt install build-essential -y
-     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-     (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/$USER/.bashrc
-     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-     brew install exa bat httpie
-     WSL_BREW="off"
-fi
+sudo apt install build-essential -y
+yes "" | bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/$USER/.bashrc
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+brew install exa bat httpie
 
 ########
 # Rust #
-if [[ $WSL_RUST != "off" ]]; then
-     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-     WSL_RUST="off"
-fi
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 ###########
 # Node.js #
 # https://github.com/nvm-sh/nvm
-if [[ $WSL_NODE != "off" ]]; then
-     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
-     exec $SHELL
-     nvm install --lts
-     nvm use --lts
-     npm install -g npm@latest yarn
-     WSL_NODE="off"
-fi
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+nvm install --lts
+nvm use --lts
+npm install -g npm@latest yarn
 
 ##########
 # Python #
@@ -71,52 +74,77 @@ tldr -u
 # FZF #
 # https://github.com/junegunn/fzf
 sudo apt install fzf -y
-echo 'eval "$(zoxide init bash)"' >> $HOME/.bashrc
-echo 'source /usr/share/doc/fzf/examples/key-bindings.bash' >> $HOME/.bashrc
-echo 'source /usr/share/doc/fzf/examples/completion.bash' >> $HOME/.bashrc
+echo "eval '$(zoxide init bash)'" >> $HOME/.bashrc
+echo "source /usr/share/doc/fzf/examples/key-bindings.bash" >> $HOME/.bashrc
+echo "source /usr/share/doc/fzf/examples/completion.bash" >> $HOME/.bashrc
 
 ##########
 # Neovim #
-sudo apt install neovim -y
-# TODO: Importar configuración
+brew install neovim
+xdg_config nvim
 
 ########
 # Tmux #
 sudo apt install tmux -y
-# TODO: Importar configuración
+xdg_config tmux
 
-##########
-# Podman #
-# https://linux.how2shout.com/how-to-install-podman-on-ubuntu-20-04-lts-focal-fossa/
-echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /" \
-     | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+############
+# Starship #
+brew install starship
+echo 'eval "$(starship init bash)"' >> $HOME/.bashrc
+xdg_config starship
 
-curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key" \
-     | sudo apt-key add -
+if [[ "$WSL_VIRT_ENGINE" == "docker" ]]; then
+    ##########
+    # Docker #
+    for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt remove $pkg; done
+    sudo apt install ca-certificates curl gnupg -y
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" |
+        sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+    sudo apt update
+    sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+    docker run hello-world
+elif [[ "$WSL_VIRT_ENGINE" == "podman" ]]; then
+    ##########
+    # Podman #
+    # https://linux.how2shout.com/how-to-install-podman-on-ubuntu-20-04-lts-focal-fossa/
+    echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /" |
+        sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
 
-sudo apt update
-sudo apt install podman -y
+    curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key" |
+        sudo apt-key add -
 
-# https://github.com/containers/buildah/issues/3726#issuecomment-1171146242
-sudo mount --make-rshared /
+    sudo apt update
+    sudo apt install podman -y
 
-# Probar instalación de Podman
-podman search ubuntu
+    # https://github.com/containers/buildah/issues/3726#issuecomment-1171146242
+    sudo mount --make-rshared /
 
-# Instalación de Podman Compose
-sudo -H pip install podman-compose
+    # Probar instalación de Podman
+    podman search ubuntu
 
-# Reiniciar shell
-exec $SHELL
+    # Instalación de Podman Compose
+    sudo -H pip install podman-compose
+else
+    echo "No se especificó un motor de virtualización"
+fi
 
 # Convertir "/" en compartido
 # https://github.com/containers/buildah/issues/3726#issuecomment-1171146242
 sudo mount --make-rshared /
 
-# Iniciar nueva sesión de Tmux
-tmux new -s dev
+gh_auth() {
+    ssh_key="$HOME/.ssh/ghid"
+    read -p "Ingresa el access token de GitHub: " access_token
+    echo "${access_token}" | gh auth login --with-token
 
-# Limpia variables de entorno
-clear() {
-     unset $(compgen -v | grep "^WSL_")
+    ssh-keygen -t ed25519 -f $ssh_key -C $email
+    eval "$(ssh-agent -s)"
+    ssh-add $ssh_key
+
+    gh ssh-key add ${ssh_key}.pub --title "Ubuntu 22.04"
 }

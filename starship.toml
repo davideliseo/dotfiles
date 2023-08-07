@@ -1,96 +1,222 @@
-"$schema" = 'https://starship.rs/config-schema.json'
-
-# Inserts a blank line between shell prompts
-add_newline = true
-
-format = """
-$username\
-$hostname\
-$shlvl\
-$kubernetes\
-$directory\
-$git_branch\
-$git_commit\
-$git_state\
-$git_status\
-$hg_branch\
-$docker_context\
-$package\
-$cmake\
-$dart\
-$dotnet\
-$elixir\
-$elm\
-$erlang\
-$golang\
-$helm\
-$java\
-$julia\
-$kotlin\
-$nim\
-$nodejs\
-$ocaml\
-$perl\
-$php\
-$purescript\
-$python\
-$ruby\
-$rust\
-$scala\
-$swift\
-$terraform\
-$vagrant\
-$zig\
-$nix_shell\
-$conda\
-$memory_usage\
-$aws\
-$gcloud\
-$openstack\
-$env_var\
-$crystal\
-$custom\
-$battery\
-$cmd_duration\
-$time\
-$line_break\
-$lua\
-$jobs\
-$status\
-$shell\
-$character"""
+command_timeout = 10000
 
 [character]
-success_symbol = "[::](bold green)"
-error_symbol = "[::](bold red)"
-vicmd_symbol = "[>>](bold green)"
-
-[username]
-style_user = "bold red"
-show_always = true
-
-[time]
-disabled = false
-style = "bold green"
-
-[directory]
-home_symbol = "~"
-read_only = " "
-style = "bold cyan"
-truncation_symbol = ""
-use_logical_path = true
-# fish_style_pwd_dir_length = 1
-
-[rust]
-symbol = "Rust "
+success_symbol = "[>](bold green)"
+error_symbol = "[x](bold red)"
+vimcmd_symbol = "[<](bold green)"
 
 [git_commit]
+tag_symbol = " tag "
+commit_hash_length = 6
 only_detached = false
-tag_disabled = false
-tag_symbol = " "
 
-# [nodejs]
-# symbol = " "
-#
-# [package]
-# symbol = " "
+[git_status]
+ahead = ">"
+behind = "<"
+diverged = "<>"
+renamed = "r"
+deleted = "x"
+ignore_submodules = true
+untracked = ""
+
+[aws]
+symbol = "aws "
+
+[azure]
+symbol = "az "
+
+[bun]
+symbol = "bun "
+
+[c]
+symbol = "C "
+
+[cobol]
+symbol = "cobol "
+
+[conda]
+symbol = "conda "
+
+[crystal]
+symbol = "cr "
+
+[cmake]
+symbol = "cmake "
+
+[daml]
+symbol = "daml "
+
+[dart]
+symbol = "dart "
+
+[deno]
+symbol = "deno "
+
+[dotnet]
+symbol = ".NET "
+
+[directory]
+read_only = " ro"
+
+[docker_context]
+symbol = "docker "
+
+[elixir]
+symbol = "exs "
+
+[elm]
+symbol = "elm "
+
+[fennel]
+symbol = "fnl "
+
+[fossil_branch]
+symbol = "fossil "
+
+[gcloud]
+symbol = "gcp "
+
+[git_branch]
+symbol = "git "
+
+[golang]
+symbol = "go "
+
+[gradle]
+symbol = "gradle "
+
+[guix_shell]
+symbol = "guix "
+
+[hg_branch]
+symbol = "hg "
+
+[java]
+symbol = "java "
+
+[julia]
+symbol = "jl "
+
+[kotlin]
+symbol = "kt "
+
+[lua]
+symbol = "lua "
+
+[nodejs]
+symbol = "nodejs "
+
+[memory_usage]
+symbol = "memory "
+
+[meson]
+symbol = "meson "
+
+[nim]
+symbol = "nim "
+
+[nix_shell]
+symbol = "nix "
+
+[ocaml]
+symbol = "ml "
+
+[opa]
+symbol = "opa "
+
+[os.symbols]
+Alpaquita = "alq "
+Alpine = "alp "
+Amazon = "amz "
+Android = "andr "
+Arch = "rch "
+Artix = "atx "
+CentOS = "cent "
+Debian = "deb "
+DragonFly = "dfbsd "
+Emscripten = "emsc "
+EndeavourOS = "ndev "
+Fedora = "fed "
+FreeBSD = "fbsd "
+Garuda = "garu "
+Gentoo = "gent "
+HardenedBSD = "hbsd "
+Illumos = "lum "
+Linux = "lnx "
+Mabox = "mbox "
+Macos = "mac "
+Manjaro = "mjo "
+Mariner = "mrn "
+MidnightBSD = "mid "
+Mint = "mint "
+NetBSD = "nbsd "
+NixOS = "nix "
+OpenBSD = "obsd "
+OpenCloudOS = "ocos "
+openEuler = "oeul "
+openSUSE = "osuse "
+OracleLinux = "orac "
+Pop = "pop "
+Raspbian = "rasp "
+Redhat = "rhl "
+RedHatEnterprise = "rhel "
+Redox = "redox "
+Solus = "sol "
+SUSE = "suse "
+Ubuntu = "ubnt "
+Unknown = "unk "
+Windows = "win "
+
+[package]
+symbol = "pkg "
+
+[perl]
+symbol = "pl "
+
+[php]
+symbol = "php "
+
+[pijul_channel]
+symbol = "pijul "
+
+[pulumi]
+symbol = "pulumi "
+
+[purescript]
+symbol = "purs "
+
+[python]
+symbol = "py "
+
+[raku]
+symbol = "raku "
+
+[ruby]
+symbol = "rb "
+
+[rust]
+symbol = "rs "
+
+[scala]
+symbol = "scala "
+
+[spack]
+symbol = "spack "
+
+[solidity]
+symbol = "solidity "
+
+[status]
+symbol = "[x](bold red) "
+
+[sudo]
+symbol = "sudo "
+
+[swift]
+symbol = "swift "
+
+[terraform]
+symbol = "terraform "
+
+[zig]
+symbol = "zig "

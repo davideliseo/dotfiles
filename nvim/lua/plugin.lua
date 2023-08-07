@@ -12,7 +12,13 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-require('lazy').setup {
+opts = {
+  defaults = {
+    lazy = true,
+  }
+}
+
+require('lazy').setup({
   {
     'folke/tokyonight.nvim',
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
@@ -22,18 +28,18 @@ require('lazy').setup {
       vim.cmd([[colorscheme tokyonight-night]])
     end,
   },
-  {
-    'projekt0n/github-nvim-theme',
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
-      require('github-theme').setup({
-        -- ...
-      })
+  -- {
+  --   'projekt0n/github-nvim-theme',
+  --   lazy = false, -- make sure we load this during startup if it is your main colorscheme
+  --   priority = 1000, -- make sure to load this before all the other start plugins
+  --   config = function()
+  --     require('github-theme').setup({
+  --       -- ...
+  --     })
 
-      -- vim.cmd([[colorscheme github_dark]])
-    end,
-  },
+  --     -- vim.cmd([[colorscheme github_dark]])
+  --   end,
+  -- },
   {
     'nvim-treesitter/nvim-treesitter',
     build = function()
@@ -42,7 +48,7 @@ require('lazy').setup {
   },
   {
     'folke/which-key.nvim',
-    event = "VeryLazy",
+    event = 'VeryLazy',
     init = function()
       vim.o.timeout = true
       vim.o.timeoutlen = 300
@@ -64,23 +70,28 @@ require('lazy').setup {
   { 'numToStr/Comment.nvim' },
   {
     'nvim-telescope/telescope.nvim', tag = '0.1.1',
+    cmd = 'Telescope',
     dependencies = { 'nvim-lua/plenary.nvim' }
   },
   {
     'nvim-telescope/telescope-file-browser.nvim',
+    event = 'VeryLazy',
     dependencies = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' }
   },
   {
     'folke/trouble.nvim',
+    event = 'VeryLazy',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
   },
   {
     'folke/todo-comments.nvim',
+    event = 'VeryLazy',
     dependencies = { 'nvim-lua/plenary.nvim' },
   },
   {
     'nvim-tree/nvim-tree.lua',
     version = '*',
+    cmd = 'NvimTree',
     dependencies = {
       'nvim-tree/nvim-web-devicons',
     },
@@ -129,6 +140,8 @@ require('lazy').setup {
   {
     'glepnir/dashboard-nvim',
     event = 'VimEnter',
+    lazy = false,
+    priority = 999,
     config = function()
       require('dashboard').setup {
         theme = 'hyper',
@@ -177,5 +190,8 @@ require('lazy').setup {
     end,
     dependencies = { 'nvim-tree/nvim-web-devicons' }
   },
-  { 'folke/zen-mode.nvim' },
-}
+  { 
+    'folke/zen-mode.nvim',
+    cmd = 'ZenMode',
+  },
+}, opts)
