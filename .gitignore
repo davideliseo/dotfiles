@@ -1,6 +1,0 @@
-*
-!.gitignore
-!*/
-!/nvim/**
-!/tmux/**
-!starship.toml

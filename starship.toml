@@ -37,6 +37,9 @@ symbol = "cobol "
 [conda]
 symbol = "conda "
 
+[container]
+disabled = true
+
 [crystal]
 symbol = "cr "
 
@@ -90,6 +93,10 @@ symbol = "guix "
 
 [hg_branch]
 symbol = "hg "
+
+[hostname]
+format = '[$ssh_symbol$hostname]($style) in '
+ssh_symbol = ""
 
 [java]
 symbol = "java "
