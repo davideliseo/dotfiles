@@ -1,0 +1,23 @@
+# https://pkg.go.dev/github.com/gokcehan/lf#section-readme
+
+set ifs "\n"
+set number
+set relativenumber
+set cursorpreviewfmt ""
+set dircounts
+set drawbox false
+set info size
+set ratios 1:2:1
+
+map d
+map dd cut
+
+map dD $trash $fx
+
+map y
+map yy copy
+
+map bb $massren $fx
+
+cmd open_with $$1 $f
+map o push :open_with<space>

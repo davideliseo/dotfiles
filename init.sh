@@ -8,7 +8,7 @@
 name="David Uribe"
 email="daviduribe998@gmail.com"
 
-DIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
 ### BEGIN
 # Abortar script en caso de error
@@ -39,6 +39,10 @@ git config --global user.email "$email"
 git config --global user.name "$name"
 # TODO: Importar configuración
 
+########
+# Fonts
+brew tap homebrew/cask-fonts && brew install --cask font-jetbrains-mono
+
 ##########
 # Zoxide #
 # https://github.com/ajeetdsouza/zoxide
@@ -46,9 +50,9 @@ brew install zoxide
 # TODO: Importar historial de directorios
 
 ##########
-# Ranger #
-brew install ranger
-# TODO: Importar configuración
+# LF #
+brew install lf
+ln -sF $DIR/lf $HOME/.config/lf
 
 ########
 # TLDR #
@@ -103,7 +107,8 @@ $fish -c "
 asdf plugin add flutter;
 asdf install flutter latest;
 asdf global flutter latest;
-flutter config --disable-telemetry;"
+flutter config --disable-telemetry;
+dart --disable-telemetry;"
 
 ###########
 # Flutter #
@@ -123,12 +128,19 @@ asdf global python latest;"
 
 #######
 # CLI #
-brew install eza bat bottom
+brew install eza bat bottom trash massren ripgrep sqlite3
+massren --config editor nvim && massren --config include_header 0
 
 #######
 # GUI #
-brew install visual-studio-code iterm2 postman gitkraken orbstack spotify raycast arc keka android-studio xcodes
-xcodes install --latest
+brew install visual-studio-code iterm2-beta pictogram postman gitkraken orbstack spotify raycast arc keka android-studio
+brew tap homebrew/cask-versions && brew install google-chrome-dev
+
+brew install rbenv ruby-build
+rbenv install 3.2.2
+
+# brew install xcodes
+# xcodes install --latest
 
 ################
 # Shell extras #
@@ -143,4 +155,3 @@ fish_update_completions;"
 sudo unzip -j $DIR/fonts/jetbrains-mono.zip -d /Library/Fonts
 
 ### END
-source $HOME/.config/fish/config.fish
