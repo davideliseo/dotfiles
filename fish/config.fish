@@ -21,3 +21,7 @@ fish_add_path $HOME/.local/share/gem/ruby/3.2.0/bin
 fish_add_path $HOME/.pub-cache/bin
 fish_add_path $HOME/Library/Android/sdk
 fish_add_path /Applications/Alacritty.app/Contents/MacOS
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH

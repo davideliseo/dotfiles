@@ -1,5 +1,12 @@
 return {
   {
+    -- s{char}<space>: jump to a character before the end of the line.
+    -- s<space><space>: jump to an empty line (or any EOL position if Visual mode or virtualedit allows it)
+    -- s{char}<enter>: jump to the first {char}{?} pair right away.
+    -- s<enter>: repeat the last search.
+    -- s<enter><enter>... or s{char}<enter><enter>...: traverse through the matches.
+    -- search bidirectionally in the window, or bind only one key to Leap, and search in all windows, if you are okay with the trade-offs (see FAQ).
+    -- map keys to repeat motions without explicitly invoking Leap, similar to how ; and , works (see :h leap-repeat-keys).
     'ggandor/leap.nvim',
     event = { 'BufReadPost', 'BufNewFile' },
     keys = {
@@ -19,6 +26,32 @@ return {
       leap.create_default_mappings()
     end,
     dependencies = { { "tpope/vim-repeat" } },
+  },
+  {
+    "cshuaimin/ssr.nvim",
+    keys = {
+      {
+        "<leader>sr",
+        function() require("ssr").open() end,
+        mode = { "n", "x" },
+        desc = "Structural search & replace",
+      },
+    },
+    opts = {
+      border = "rounded",
+      min_width = 50,
+      min_height = 5,
+      max_width = 120,
+      max_height = 25,
+      adjust_window = true,
+      keymaps = {
+        close = "<Esc>",
+        next_match = "n",
+        prev_match = "N",
+        replace_confirm = "<Cr>",
+        replace_all = "<Leader><Cr>",
+      },
+    },
   },
   {
     'smoka7/hop.nvim',

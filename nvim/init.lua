@@ -27,5 +27,4 @@ local opts = {
 require('config')
 require('lazy').setup({{ import = "plugins" }}, opts)
 require('autocmd')
-require('highlight')
 require('keymap')

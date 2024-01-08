@@ -7,7 +7,7 @@ return {
       indent = { char = '│' },
       scope = { enabled = false },
       exclude = {
-        filetypes = { 'dashboard' },
+        filetypes = { 'dashboard', 'ssr' },
       },
     },
   },
@@ -33,6 +33,7 @@ return {
     },
     keys = function()
       local ns = require('neoscroll')
+      do return end
       return {
         {
           'j',

@@ -91,8 +91,34 @@ return {
       local lsp_zero = require('lsp-zero')
       lsp_zero.extend_lspconfig()
 
-      lsp_zero.on_attach(function(client, bufnr)
-        lsp_zero.default_keymaps({ buffer = bufnr }) -- see :help lsp-zero-keybindings to learn the available actions
+      lsp_zero.on_attach(function(_, bufnr)
+        local telescope = require('telescope.builtin')
+        require('which-key').register({
+          ['<Leader>l'] = {
+            name = 'lsp',
+            ['i'] = { vim.lsp.buf.hover, 'Hover symbol definition under cursor' },
+            ['r'] = { vim.lsp.buf.rename, 'Rename all references to symbol under cursor' },
+            ['f'] = { vim.lsp.buf.format, 'Format buffer using LSP server' },
+            ['a'] = { function()
+              vim.lsp.buf.code_action({
+                filter = function(action)
+                  vim.print(action); return true
+                end,
+              })
+            end, 'Display code actions available' },
+            ['o'] = { telescope.lsp_document_symbols, 'LSP document symbols' },
+            ['d'] = { telescope.diagnostics, 'LSP diagnostics' },
+            ['g'] = {
+              name = 'goto',
+              ['d'] = { vim.lsp.buf.definition, 'Jumps to definition of symbol under cursor' },
+              ['D'] = { vim.lsp.buf.declaration, 'Jumps to declaration of symbol under cursor' },
+              ['i'] = { vim.lsp.buf.implementation, 'Lists all implementations of symbol under cursor' },
+              ['t'] = { vim.lsp.buf.type_definition, 'Jumps to definition of type symbol under cursor' },
+              ['r'] = { telescope.lsp_references, 'LSP references' },
+              ['s'] = { vim.lsp.buf.signature_help, 'Signature information of symbol under cursor' },
+            },
+          },
+        }, { buffer = bufnr })
       end)
 
       -- NOTE: dartls is configured by akinsho/flutter-tools.nvim
@@ -100,15 +126,14 @@ return {
 
       require('mason').setup({})
       require('mason-lspconfig').setup({
-        ensure_installed = { 'tsserver' },
+        ensure_installed = { 'lua_ls', 'tsserver', 'astro', 'tailwindcss' },
         handlers = {
           lsp_zero.default_setup,
           lua_ls = function()
-            -- (Optional) Configure lua language server for neovim
             local lua_opts = lsp_zero.nvim_lua_ls()
             require('lspconfig').lua_ls.setup(lua_opts)
           end,
-        }
+        },
       })
     end
   },
@@ -147,13 +172,61 @@ return {
           virtual_text_str = '■■',
         },
         on_attach = function()
+          vim.api.nvim_set_hl(0, 'FlutterWidgetGuides', { link = 'Whitespace' })
+
           local wk = require('which-key')
+          local commands = require('flutter-tools.commands');
+          local function flutter_action(kind)
+            vim.lsp.buf.code_action({
+              apply = true,
+              filter = function(action) return action.kind == kind end,
+            })
+          end
+
           wk.register({
             ['<Leader>l'] = {
               name = 'lsp',
-              ['l'] = {
+              ['p'] = {
                 require('telescope').extensions.flutter.commands,
                 'Flutter LSP commands',
+              },
+              ['s'] = {
+                name = 'flutter',
+                ['r'] = { commands.reload, 'Flutter: Hot reload' },
+                ['R'] = { commands.restart, 'Flutter: Hot restart' },
+                ['w'] = { commands.run, 'Flutter: Run' },
+                ['q'] = { commands.quit, 'Flutter: Quit' },
+                ['a'] = {
+                  name = 'flutter-actions',
+                  ['x'] = {
+                    function() flutter_action('source.fixAll') end,
+                    'Flutter: Fix all',
+                  },
+                  ['e'] = {
+                    function() flutter_action('refactor.extract') end,
+                    'Flutter: Extract',
+                  },
+                  ['d'] = {
+                    function() flutter_action('refactor.flutter.removeWidget') end,
+                    'Flutter: Remove widget',
+                  },
+                  ['c'] = {
+                    function() flutter_action('refactor.flutter.wrap.container') end,
+                    'Flutter: Wrap with container',
+                  },
+                  ['h'] = {
+                    function() flutter_action('refactor.flutter.wrap.row') end,
+                    'Flutter: Wrap with row',
+                  },
+                  ['v'] = {
+                    function() flutter_action('refactor.flutter.wrap.column') end,
+                    'Flutter: Wrap with column',
+                  },
+                  ['p'] = {
+                    function() flutter_action('refactor.flutter.wrap.padding') end,
+                    'Flutter: Wrap with padding',
+                  },
+                },
               },
             },
           })

@@ -12,6 +12,10 @@ return {
 
       telescope.setup({
         defaults = {
+          layout_strategy = "vertical",
+          layout_config = {
+            preview_height = 0.5,
+          },
           mappings = {
             i = {
               ['<C-h>'] = 'which_key',
@@ -60,17 +64,39 @@ return {
       telescope.load_extension('macrothis')
       telescope.load_extension('flutter')
 
+      vim.api.nvim_create_augroup('Telescope', { clear = true })
+      vim.api.nvim_create_autocmd('User', {
+        pattern = { 'TelescopePreviewerLoaded' },
+        callback = function()
+          vim.opt_local.number = true
+        end,
+      })
+
+      vim.api.nvim_set_hl(0, 'TelescopeMatching', { link = 'Constant' })
+
       require('which-key').register({
         ['<Leader>q'] = {
           name = 'telescope',
-          ['f'] = { extensions.smart_open.smart_open, 'Files (smart)' },
-          ['F'] = { builtin.find_files, 'Files' },
+          ['f'] = { extensions.smart_open.smart_open, 'Find files (smart)' },
+          ['F'] = { builtin.find_files, 'Find files' },
+          ['r'] = { builtin.oldfiles, 'Recent files' },
           ['G'] = { builtin.git_files, 'Git files' },
-          ['o'] = { builtin.lsp_document_symbols, 'LSP document symbols' },
-          ['r'] = { builtin.lsp_references, 'LSP references' },
-          ['d'] = { builtin.diagnostics, 'LSP diagnostics' },
-          ['g'] = { builtin.live_grep, 'Live grep' },
+          ['s'] = { builtin.live_grep, 'Live grep' },
+          ['S'] = {
+            function()
+              builtin.grep_string({
+                search = require("utils").get_visual_selection({
+                  use_last_selection = false,
+                }),
+                use_regex = true,
+                word_match = "-w",
+              })
+            end,
+            'Grep string',
+            mode = { "x", "n" },
+          },
           ['b'] = { builtin.buffers, 'Buffers' },
+          ['q'] = { builtin.quickfix, 'Quickfix' },
         },
       })
     end,
