@@ -68,6 +68,10 @@ return {
           completeopt = 'menu,menuone,noinsert',
         },
         mapping = {
+          ['<CR>'] = cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Insert,
+            select = true,
+          }),
           ['<Tab>'] = cmp.mapping.confirm({ select = true }),
           ['<C-p>'] = cmp.mapping.complete({ reason = cmp.ContextReason.Auto }),
           ['<C-u>'] = cmp.mapping.scroll_docs(-4),
@@ -98,7 +102,14 @@ return {
             name = 'lsp',
             ['i'] = { vim.lsp.buf.hover, 'Hover symbol definition under cursor' },
             ['r'] = { vim.lsp.buf.rename, 'Rename all references to symbol under cursor' },
-            ['f'] = { vim.lsp.buf.format, 'Format buffer using LSP server' },
+            ['f'] = {
+              function()
+                vim.lsp.buf.format({
+                  filter = function(client) return client.name ~= "tsserver" end,
+                })
+              end,
+              'Format buffer using LSP server',
+            },
             ['a'] = { function()
               vim.lsp.buf.code_action({
                 filter = function(action)
@@ -107,6 +118,7 @@ return {
               })
             end, 'Display code actions available' },
             ['o'] = { telescope.lsp_document_symbols, 'LSP document symbols' },
+            ['O'] = { telescope.lsp_dynamic_workspace_symbols, 'LSP workspace symbols' },
             ['d'] = { telescope.diagnostics, 'LSP diagnostics' },
             ['g'] = {
               name = 'goto',
@@ -126,16 +138,87 @@ return {
 
       require('mason').setup({})
       require('mason-lspconfig').setup({
-        ensure_installed = { 'lua_ls', 'tsserver', 'astro', 'tailwindcss' },
+        ensure_installed = { 'lua_ls', 'tsserver', 'astro', 'tailwindcss', 'prismals', 'rust_analyzer' },
         handlers = {
           lsp_zero.default_setup,
           lua_ls = function()
             local lua_opts = lsp_zero.nvim_lua_ls()
             require('lspconfig').lua_ls.setup(lua_opts)
           end,
+          angularls = function()
+            require('lspconfig').angularls.setup({
+              filetypes = { "angular", "typescript", "html", "typescriptreact", "typescript.tsx" }
+            })
+          end,
         },
       })
-    end
+
+      require('lspconfig').rust_analyzer.setup {
+        settings = {
+          ["rust-analyzer"] = {
+            rustfmt = {
+              extraArgs = { "+nightly", },
+            },
+          }
+        }
+      }
+
+      require('lspconfig').tailwindcss.setup({
+        filetypes = {
+          "angular", "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango",
+          "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html",
+          "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor",
+          "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascript", "javascriptreact",
+          "reason", "rescript", "typescript", "typescriptreact", "vue", "svelte",
+        },
+        settings = {
+          tailwindCSS = {
+            classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
+            lint = {
+              cssConflict = "warning",
+              invalidApply = "error",
+              invalidConfigPath = "error",
+              invalidScreen = "error",
+              invalidTailwindDirective = "error",
+              invalidVariant = "error",
+              recommendedVariantOrder = "warning"
+            },
+            validate = true,
+            experimental = {
+              classRegex = {
+                { "cva\\((^)*)\\)",  "[\"'`]([^\"'`]*).*?[\"'`]" },
+                { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" }
+              },
+            },
+          },
+        },
+      })
+    end,
+  },
+  {
+    "jay-babu/mason-null-ls.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "williamboman/mason.nvim",
+      "nvimtools/none-ls.nvim",
+    },
+    config = function()
+      require("mason-null-ls").setup({
+        ensure_installed = {
+          -- prettierd has a bug where it won't find prettier-plugin-tailwindcss installed.
+          -- Running :exec '!' . stdpath('data') . '/mason/bin/prettierd stop' solves this issue.
+          "prettierd",
+        },
+        automatic_installation = true,
+        handlers = {},
+      })
+
+      local null_ls = require("null-ls")
+      null_ls.setup({
+        sources = {},
+        debug = true,
+      })
+    end,
   },
   {
     'akinsho/flutter-tools.nvim',

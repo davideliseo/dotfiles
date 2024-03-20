@@ -3,7 +3,7 @@ return {
     'lmburns/lf.nvim',
     cmd = 'Lf',
     keys = {
-      { '<C-l>', function() require('lf').start() end, desc = 'LF file manager' },
+      { '<Leader>fe', function() require('lf').start() end, desc = 'LF file manager' },
     },
     opts = {
       escape_quit = true,
@@ -191,9 +191,9 @@ return {
             { action = "ene | startinsert",                                        desc = "Nuevo archivo",               key = "n" },
             { action = "Telescope oldfiles",                                       desc = "Archivos recientes",          key = "r" },
             { action = "Telescope live_grep",                                      desc = "Buscar texto",                key = "s" },
-            { action = 'lua require("persistence").load()',                        desc = "Restablecer sesión anterior", key = "r" },
+            { action = 'lua require("persistence").load()',                        desc = "Restablecer sesión anterior", key = "l" },
             { action = [[lua require("lazyvim.util").telescope.config_files()()]], desc = "Configuración",               key = "c" },
-            { action = "Lazy",                                                     desc = "Plugins",                     key = "l" },
+            { action = "Lazy",                                                     desc = "Plugins",                     key = "p" },
             { action = "qa",                                                       desc = "Salir",                       key = "q" },
           },
           footer = function()

@@ -59,7 +59,7 @@ alt-shift-7 = 'move-node-to-workspace 7'
 alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-0 = 'move-node-to-workspace 10'
-alt-shift-enter = 'mode main'
+alt-shift-esc = 'mode main'
 
 [mode.resize.binding]
 h = 'resize width -50'

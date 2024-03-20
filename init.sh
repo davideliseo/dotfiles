@@ -111,7 +111,7 @@ flutter config --disable-telemetry;
 dart --disable-telemetry;"
 
 ###########
-# Flutter #
+# Node #
 $fish -c "
 asdf plugin add nodejs;
 asdf install nodejs latest;
@@ -131,16 +131,21 @@ asdf global python latest;"
 brew install eza bat bottom trash massren ripgrep sqlite3
 massren --config editor nvim && massren --config include_header 0
 
+brew install surrealdb/tap/surreal
+
 #######
 # GUI #
 brew install visual-studio-code iterm2-beta pictogram postman gitkraken orbstack spotify raycast arc keka android-studio
-brew tap homebrew/cask-versions && brew install google-chrome-dev
+brew tap homebrew/cask-versions && brew install google-chrome-dev firefox-developer-edition
 
 brew install rbenv ruby-build
 rbenv install 3.2.2
 
-# brew install xcodes
-# xcodes install --latest
+# Faltantes:
+# - Xcode
+# - UnnaturalScrollWheels
+# - AeroSpace
+# - Tidal
 
 ################
 # Shell extras #
@@ -151,7 +156,7 @@ fisher install wfxr/forgit # Interactive git: https://github.com/wfxr/forgit;
 fish_update_completions;"
 
 #########
-# Fonts #
+# Fuentes #
 sudo unzip -j $DIR/fonts/jetbrains-mono.zip -d /Library/Fonts
 
 ### END

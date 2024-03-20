@@ -13,7 +13,7 @@ return {
           'astro', 'bash', 'bibtex', 'css', 'csv', 'dart', 'diff', 'dockerfile',
           'git_config', 'git_rebase', 'gitattributes', 'gitcommit', 'gitignore',
           'graphql', 'html', 'javascript', 'json', 'jsonc', 'latex', 'php', 'prisma',
-          'proto', 'python', 'regex', 'scss', 'sql', 'svelte', 'toml', 'typescript',
+          'proto', 'python', 'regex', 'scss', 'sql', 'svelte', 'toml', 'typescript', 'tsx',
           'vue', 'xml', 'yaml',
         },
         sync_install = true,
@@ -24,9 +24,18 @@ return {
         },
       })
     end,
-    dependencies = { 
+    dependencies = {
       { 'nvim-treesitter/nvim-treesitter-textobjects' },
       { 'nvim-treesitter/playground' },
     },
   },
+  {
+    "dariuscorvus/tree-sitter-surrealdb.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    ft = "surrealdb",
+    config = function()
+      -- setup step
+      require("tree-sitter-surrealdb").setup()
+    end,
+  }
 }

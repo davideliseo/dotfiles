@@ -4,6 +4,9 @@ vim.wo.number = true
 vim.wo.relativenumber = true
 vim.opt.cursorline = true
 
+vim.o.ignorecase = true
+vim.o.smartcase = true
+
 vim.opt.mouse = nil
 vim.o.expandtab = true
 vim.o.smartindent = true

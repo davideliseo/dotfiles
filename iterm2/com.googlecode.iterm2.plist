@@ -2663,6 +2663,8 @@
 			<string>Default</string>
 			<key>Disable Window Resizing</key>
 			<true/>
+			<key>Draw Powerline Glyphs</key>
+			<false/>
 			<key>Faint Text Alpha (Dark)</key>
 			<real>0.5</real>
 			<key>Faint Text Alpha (Light)</key>
@@ -3113,7 +3115,7 @@
 			<key>Rows</key>
 			<integer>25</integer>
 			<key>Screen</key>
-			<integer>-1</integer>
+			<integer>-2</integer>
 			<key>Scrollback Lines</key>
 			<integer>2000</integer>
 			<key>Selected Text Color</key>
@@ -3339,6 +3341,8 @@
 	<false/>
 	<key>WindowNumber</key>
 	<true/>
+	<key>findMode_iTerm</key>
+	<integer>0</integer>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>

@@ -11,7 +11,7 @@ starship init fish | source
 zoxide init fish | source
 status --is-interactive; and rbenv init - fish | source
 
-alias ls="eza"
+alias ls="eza -lah"
 alias jo="joshuto"
 
 export VISUAL="nvim"
@@ -21,6 +21,8 @@ fish_add_path $HOME/.local/share/gem/ruby/3.2.0/bin
 fish_add_path $HOME/.pub-cache/bin
 fish_add_path $HOME/Library/Android/sdk
 fish_add_path /Applications/Alacritty.app/Contents/MacOS
+fish_add_path $HOME/.cargo/bin
+fish_add_path $HOME/.surrealdb
 
 # bun
 set --export BUN_INSTALL "$HOME/.bun"

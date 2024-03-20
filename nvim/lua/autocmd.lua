@@ -31,10 +31,17 @@ autocmd('BufReadPost', {
 })
 
 autocmd('BufWritePre', {
-  pattern = { '*.js', '*.ts' },
+  pattern = { '*.js', '*.ts', '*.jsx', '*.tsx' },
   desc = 'Auto-format JS/TS files after saving',
   group = group,
-  callback = function(args) vim.cmd(':silent !prettier --write ' .. args.file) end,
+  callback = function(args)
+    vim.lsp.buf.format({
+      timeout_ms = 5000,
+      filter = function(client)
+        return client.name == "null-ls"
+      end,
+    })
+  end,
 })
 
 autocmd('BufWritePre', {
@@ -43,11 +50,9 @@ autocmd('BufWritePre', {
   group = group,
   callback = function()
     vim.lsp.buf.format({ timeout_ms = 5000 })
-    repeat
-      local action = vim.lsp.buf.code_action({
-        apply = true, -- Execute without user input if there's only one action available
-        filter = function(action) return action.kind == 'source.fixAll' end,
-      })
-    until action == nil
+    vim.lsp.buf.code_action({
+      apply = true, -- Execute without user input if there's only one action available
+      filter = function(action) return action.kind == 'source.fixAll' end,
+    })
   end,
 })

@@ -4,6 +4,7 @@ return {
     tag = '0.1.1',
     cmd = 'Telescope',
     dependencies = { 'nvim-lua/plenary.nvim' },
+    keys = { '<Leader>q' },
     config = function()
       local telescope = require("telescope")
       local builtin = require('telescope.builtin')
@@ -14,13 +15,17 @@ return {
         defaults = {
           layout_strategy = "vertical",
           layout_config = {
-            preview_height = 0.5,
+            vertical = {
+              preview_height = 0.5,
+            },
           },
           mappings = {
             i = {
               ['<C-h>'] = 'which_key',
               ['<C-Space>'] = function(bufnr) extensions.hop.hop(bufnr) end,
               ['<Esc>'] = actions.close,
+              ['<C-q>'] = actions.smart_send_to_qflist + actions.open_qflist,
+              ['<M-q>'] = false,
             },
           },
           vimgrep_arguments = {
@@ -75,14 +80,25 @@ return {
       vim.api.nvim_set_hl(0, 'TelescopeMatching', { link = 'Constant' })
 
       require('which-key').register({
-        ['<Leader>q'] = {
-          name = 'telescope',
+        ['<Leader>f'] = {
+          name = 'files',
           ['f'] = { extensions.smart_open.smart_open, 'Find files (smart)' },
-          ['F'] = { builtin.find_files, 'Find files' },
           ['r'] = { builtin.oldfiles, 'Recent files' },
-          ['G'] = { builtin.git_files, 'Git files' },
-          ['s'] = { builtin.live_grep, 'Live grep' },
-          ['S'] = {
+        },
+        ['<Leader>s'] = {
+          name = 'search',
+          ['s'] = { builtin.live_grep, 'Fuzzy search' },
+          ['e'] = {
+            function()
+              builtin.grep_string({
+                search = '',
+                use_regex = true,
+                word_match = '-w',
+              })
+            end,
+            'Exact search',
+          },
+          ['v'] = {
             function()
               builtin.grep_string({
                 search = require("utils").get_visual_selection({
@@ -92,11 +108,17 @@ return {
                 word_match = "-w",
               })
             end,
-            'Grep string',
+            'Exact search (visual selection or under cursor)',
             mode = { "x", "n" },
           },
+          ['h'] = { builtin.search_history, 'Search history' },
+        },
+        ['<Leader>p'] = {
+          name = 'pickers',
           ['b'] = { builtin.buffers, 'Buffers' },
           ['q'] = { builtin.quickfix, 'Quickfix' },
+          ['c'] = { builtin.commands, 'Commands' },
+          ['m'] = { builtin.marks, 'Marks' },
         },
       })
     end,
