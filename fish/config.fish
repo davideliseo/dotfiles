@@ -5,6 +5,10 @@ if status is-interactive
     fish_vi_key_bindings
 end
 
+eval (ssh-agent -c)
+ssh-add $HOME/.ssh/github
+ssh-add $HOME/.ssh/azure-devops
+
 eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 source /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.fish
 
