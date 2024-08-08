@@ -5,25 +5,14 @@ if status is-interactive
     fish_vi_key_bindings
 end
 
-eval (/opt/homebrew/bin/brew shellenv)
-source /opt/homebrew/opt/asdf/libexec/asdf.fish
+eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+source /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.fish
+
 starship init fish | source
 zoxide init fish | source
-status --is-interactive; and rbenv init - fish | source
 
 alias ls="eza -lah"
 alias jo="joshuto"
 
 export VISUAL="nvim"
 export EDITOR="nvim"
-export CHROME_EXECUTABLE="/Applications/Google Chrome Dev.app/Contents/MacOS/Google Chrome Dev"
-fish_add_path $HOME/.local/share/gem/ruby/3.2.0/bin
-fish_add_path $HOME/.pub-cache/bin
-fish_add_path $HOME/Library/Android/sdk
-fish_add_path /Applications/Alacritty.app/Contents/MacOS
-fish_add_path $HOME/.cargo/bin
-fish_add_path $HOME/.surrealdb
-
-# bun
-set --export BUN_INSTALL "$HOME/.bun"
-set --export PATH $BUN_INSTALL/bin $PATH
