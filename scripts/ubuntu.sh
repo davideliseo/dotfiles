@@ -35,6 +35,8 @@ chsh -s $(which fish)
 
 mkdir -p $HOME/.config/fish
 ln -sfF $DIR/fish/config.fish $HOME/.config/fish/config.fish
+# Instalar función fish_ssh_agent
+wget https://gitlab.com/kyb/fish_ssh_agent/raw/master/functions/fish_ssh_agent.fish -P ~/.config/fish/functions/
 rm -rf $HOME/.bashrc $HOME/.profile $HOME/.z**
 
 #######
