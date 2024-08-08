@@ -163,6 +163,14 @@ return {
         }
       }
 
+      require('lspconfig').tsserver.setup {
+        init_options = {
+          preferences = {
+            importModuleSpecifierPreference = "non-relative",
+          }
+        }
+      }
+
       require('lspconfig').tailwindcss.setup({
         filetypes = {
           "angular", "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango",
@@ -186,7 +194,7 @@ return {
             validate = true,
             experimental = {
               classRegex = {
-                { "cva\\((^)*)\\)",  "[\"'`]([^\"'`]*).*?[\"'`]" },
+                { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
                 { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" }
               },
             },
