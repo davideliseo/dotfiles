@@ -105,7 +105,7 @@ asdf global nodejs 18.18.0;"
 
 #######
 # CLI #
-brew install eza bat bottom trash-cli massren ripgrep sqlite3
+brew install eza bat bottom trash-cli massren ripgrep sqlite3 lazygit
 massren --config editor nvim && massren --config include_header 0
 
 ################
