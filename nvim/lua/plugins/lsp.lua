@@ -46,6 +46,7 @@ return {
 
       cmp.setup({
         sources = {
+          { name = 'vim-dadbod-completion' },
           -- hrsh7th/cmp-nvim-lsp
           { name = 'nvim_lsp' },
           {
