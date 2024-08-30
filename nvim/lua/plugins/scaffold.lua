@@ -137,7 +137,7 @@ return {
     'folke/which-key.nvim',
     event = 'VeryLazy',
     opts = {
-      ignore_missing = false,
+      notify = false,
     },
     config = function(_, opts)
       require('which-key').setup(opts)

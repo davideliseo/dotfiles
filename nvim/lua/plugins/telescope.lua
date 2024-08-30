@@ -12,10 +12,10 @@ return {
 
       telescope.setup({
         defaults = {
-          layout_strategy = "vertical",
+          layout_strategy = "horizontal",
           layout_config = {
-            vertical = {
-              preview_height = 0.5,
+            horizontal = {
+              width = 0.95,
             },
           },
           mappings = {
