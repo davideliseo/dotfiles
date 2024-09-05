@@ -18,7 +18,7 @@ return {
       safe_labels = 'sfnmugtz', -- Keys unlinkely to be used after auto-jumping
       labels = 'sfnjklhodweimbuyvrgtaqpcxz',
       highlight_unlabeled_phase_one_targets = true,
-      equivalence_classes = { ' \t\r\n', 'aá', 'eé', 'ií', 'oó', 'uú', ' ,;.:-_`+*!"#$%&/=\'¿?¡~^´¨', '()[]{}<>' },
+      equivalence_classes = { ' \t\r\n', 'aá', 'eé', 'ií', 'oó', 'uú', ',;.:-_`+*!"#$%&/=\'¿?¡~^´¨', '()[]{}<>' },
     },
     config = function(_, opts)
       local leap = require("leap")
