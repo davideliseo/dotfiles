@@ -139,9 +139,18 @@ return {
 
       require('mason').setup({})
       require('mason-lspconfig').setup({
-        ensure_installed = { 'lua_ls', 'tsserver', 'astro', 'tailwindcss', 'prismals', 'rust_analyzer' },
+        ensure_installed = { 'lua_ls', 'astro', 'tailwindcss', 'prismals', 'rust_analyzer' },
         handlers = {
           lsp_zero.default_setup,
+          -- function(server_name)
+          --   if server_name == "tsserver" then
+          --     server_name = "ts_ls"
+          --   end
+          --   local capabilities = require("cmp_nvim_lsp").default_capabilities()
+          --   require("lspconfig")[server_name].setup({
+          --     capabilities = capabilities,
+          --   })
+          -- end,
           lua_ls = function()
             local lua_opts = lsp_zero.nvim_lua_ls()
             require('lspconfig').lua_ls.setup(lua_opts)
@@ -164,13 +173,15 @@ return {
         }
       }
 
-      require('lspconfig').tsserver.setup {
-        init_options = {
-          preferences = {
-            importModuleSpecifierPreference = "shortest",
-          }
-        }
-      }
+      -- require('lspconfig').tsserver.setup {
+      --   init_options = {
+      --     preferences = {
+      --       importModuleSpecifierPreference = "shortest",
+      --     }
+      --   }
+      -- }
+      --
+      require('lspconfig').ts_ls.setup({})
 
       require('lspconfig').tailwindcss.setup({
         filetypes = {
