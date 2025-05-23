@@ -12,6 +12,7 @@ source /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.fish
 
 starship init fish | source
 zoxide init fish | source
+thefuck --alias | source
 
 alias ls="eza -lah"
 alias jo="joshuto"
