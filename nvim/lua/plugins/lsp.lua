@@ -14,6 +14,12 @@ return {
     'williamboman/mason.nvim',
     lazy = false,
     config = true,
+    opts = {
+      registries = {
+        "github:mason-org/mason-registry",
+        "github:Crashdummyy/mason-registry",
+      },
+    },
   },
   {
     -- <Ctrl-y>: Confirms selection.
@@ -114,7 +120,7 @@ return {
             ['a'] = { function()
               vim.lsp.buf.code_action({
                 filter = function(action)
-                  vim.print(action); return true
+                  return true
                 end,
               })
             end, 'Display code actions available' },
@@ -137,9 +143,15 @@ return {
       -- NOTE: dartls is configured by akinsho/flutter-tools.nvim
       -- require('lspconfig').dartls.setup({})
 
-      require('mason').setup({})
+      -- require('mason').setup({
+      --   registries = {
+      --     "github:mason-org/mason-registry",
+      --     "github:Crashdummyy/mason-registry",
+      --   },
+      -- })
+      --
       require('mason-lspconfig').setup({
-        ensure_installed = { 'lua_ls', 'astro', 'tailwindcss', 'prismals', 'rust_analyzer' },
+        ensure_installed = { 'astro', 'tailwindcss', 'prismals', 'rust_analyzer' },
         handlers = {
           lsp_zero.default_setup,
           -- function(server_name)
@@ -173,15 +185,13 @@ return {
         }
       }
 
-      -- require('lspconfig').tsserver.setup {
-      --   init_options = {
-      --     preferences = {
-      --       importModuleSpecifierPreference = "shortest",
-      --     }
-      --   }
-      -- }
-      --
-      require('lspconfig').ts_ls.setup({})
+      require('lspconfig').ts_ls.setup {
+        init_options = {
+          preferences = {
+            importModuleSpecifierPreference = "shortest",
+          }
+        }
+      }
 
       require('lspconfig').tailwindcss.setup({
         filetypes = {
@@ -207,7 +217,7 @@ return {
             experimental = {
               classRegex = {
                 { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
-                { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" }
+                { "cx\\(([^)]*)\\)",  "(?:'|\"|`)([^']*)(?:'|\"|`)" }
               },
             },
           },
@@ -354,8 +364,195 @@ return {
     end,
   },
   {
-    'folke/trouble.nvim',
-    cmd = { 'TroubleToggle', 'Trouble' },
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    "seblyng/roslyn.nvim",
+    ft = "cs",
+    ---@module 'roslyn.config'
+    ---@type RoslynNvimConfig
+    opts = {
+      file_watching = "auto",
+      choose_target = nil,
+      ignore_target = nil,
+      broad_search = true,
+      lock_target = false,
+      config = {
+        filetypes = { "cs" },
+        settings = {
+          ["csharp|background_analysis"] = {
+            dotnet_analyzer_diagnostics_scope = "fullSolution",
+            dotnet_compiler_diagnostics_scope = "fullSolution",
+          },
+          ["csharp|inlay_hints"] = {
+            csharp_enable_inlay_hints_for_implicit_object_creation = true,
+            csharp_enable_inlay_hints_for_implicit_variable_types = true,
+            csharp_enable_inlay_hints_for_lambda_parameter_types = true,
+            csharp_enable_inlay_hints_for_types = true,
+            dotnet_enable_inlay_hints_for_indexer_parameters = true,
+            dotnet_enable_inlay_hints_for_literal_parameters = true,
+            dotnet_enable_inlay_hints_for_object_creation_parameters = true,
+            dotnet_enable_inlay_hints_for_other_parameters = true,
+            dotnet_enable_inlay_hints_for_parameters = true,
+            dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = true,
+            dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = true,
+            dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = true,
+          },
+          ["csharp|code_lens"] = {
+            dotnet_enable_references_code_lens = true,
+          },
+          ["csharp|completion"] = {
+            dotnet_show_completion_items_from_unimported_namespaces = true,
+            dotnet_show_name_completion_suggestions = true,
+          },
+        },
+      },
+    },
+    keys = {
+      {
+        "<Leader>lD",
+        function()
+          ---@param lines string[]?
+          ---@param lnum integer
+          ---@param col integer
+          ---@param offset_encoding string
+          ---@return integer
+          local function line_byte_from_position(lines, lnum, col, offset_encoding)
+            if not lines or offset_encoding == "utf-8" then
+              return col
+            end
+
+            local line = lines[lnum + 1]
+            local ok, result = pcall(vim.str_byteindex, line, col, offset_encoding == "utf-16")
+            if ok then
+              return result --- @type integer
+            end
+
+            return col
+          end
+
+          ---@param severity lsp.DiagnosticSeverity
+          local function severity_lsp_to_vim(severity)
+            if type(severity) == "string" then
+              severity = vim.lsp.protocol.DiagnosticSeverity[severity] --- @type integer
+            end
+            return severity
+          end
+
+          --- @param diagnostic lsp.Diagnostic
+          --- @param client_id integer
+          --- @return table?
+          local function tags_lsp_to_vim(diagnostic, client_id)
+            local tags ---@type table?
+            for _, tag in ipairs(diagnostic.tags or {}) do
+              if tag == vim.lsp.protocol.DiagnosticTag.Unnecessary then
+                tags = tags or {}
+                tags.unnecessary = true
+              elseif tag == vim.lsp.protocol.DiagnosticTag.Deprecated then
+                tags = tags or {}
+                tags.deprecated = true
+              else
+                vim.lsp.log.info(string.format("Unknown DiagnosticTag %d from LSP client %d", tag, client_id))
+              end
+            end
+            return tags
+          end
+
+          ---@param bufnr integer
+          ---@return string[]?
+          local function get_buf_lines(bufnr)
+            if vim.api.nvim_buf_is_loaded(bufnr) then
+              return vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+            end
+
+            local filename = vim.api.nvim_buf_get_name(bufnr)
+            local f = io.open(filename)
+            if not f then
+              return
+            end
+
+            local content = f:read("*a")
+            if not content then
+              -- Some LSP servers report diagnostics at a directory level, in which case
+              -- io.read() returns nil
+              f:close()
+              return
+            end
+
+            local lines = vim.split(content, "\n")
+            f:close()
+            return lines
+          end
+
+          ---@param diagnostics lsp.Diagnostic[]
+          ---@param bufnr integer
+          ---@param client_id integer
+          ---@return vim.Diagnostic[]
+          local function diagnostic_lsp_to_vim(diagnostics, bufnr, client_id)
+            local buf_lines = get_buf_lines(bufnr)
+            local client = vim.lsp.get_client_by_id(client_id)
+            local offset_encoding = client and client.offset_encoding or "utf-16"
+            --- @param diagnostic lsp.Diagnostic
+            --- @return vim.Diagnostic
+            return vim.tbl_map(function(diagnostic)
+              local start = diagnostic.range.start
+              local _end = diagnostic.range["end"]
+              local message = diagnostic.message
+              if type(message) ~= "string" then
+                vim.notify_once(
+                  string.format("Unsupported Markup message from LSP client %d", client_id),
+                  vim.lsp.log_levels.ERROR
+                )
+                message = diagnostic.message.value
+              end
+              --- @type vim.Diagnostic
+              return {
+                lnum = start.line,
+                col = line_byte_from_position(buf_lines, start.line, start.character, offset_encoding),
+                end_lnum = _end.line,
+                end_col = line_byte_from_position(buf_lines, _end.line, _end.character, offset_encoding),
+                severity = severity_lsp_to_vim(diagnostic.severity),
+                message = message,
+                source = diagnostic.source,
+                code = diagnostic.code,
+                _tags = tags_lsp_to_vim(diagnostic, client_id),
+                user_data = {
+                  lsp = diagnostic,
+                },
+              }
+            end, diagnostics)
+          end
+
+          local client = vim.lsp.get_clients()[1]
+          client.request("workspace/diagnostic", { previousResultIds = {} }, function(err, result, context, config)
+            local ns = vim.lsp.diagnostic.get_namespace(client.id)
+
+            local function find_buf_or_make_unlisted(file_name)
+              for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_get_name(buf) == file_name then
+                  return buf
+                end
+              end
+
+              local buf = vim.api.nvim_create_buf(false, false)
+              vim.api.nvim_buf_set_name(buf, file_name)
+              return buf
+            end
+
+            for _, per_file_diags in ipairs(result.items) do
+              local filename = string.gsub(per_file_diags.uri, "file://", "")
+              local buf = find_buf_or_make_unlisted(filename)
+
+              vim.diagnostic.set(ns, buf, diagnostic_lsp_to_vim(per_file_diags.items, buf, context.client_id))
+            end
+          end)
+        end
+      }
+    }
+  },
+  {
+    "GustavEikaas/easy-dotnet.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", 'nvim-telescope/telescope.nvim', },
+    lazy = false,
+    config = function()
+      require("easy-dotnet").setup()
+    end
   },
 }

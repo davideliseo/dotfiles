@@ -2,6 +2,15 @@
 local group = vim.api.nvim_create_augroup('Custom auto-commands', { clear = true })
 local autocmd = vim.api.nvim_create_autocmd
 
+autocmd('FileType', {
+  pattern = { 'cs' },
+  desc = 'Set 4 space tabs for languages where it is more common.',
+  callback = function(event)
+    vim.opt_local.tabstop = 4
+    vim.opt_local.shiftwidth = 4
+  end,
+})
+
 autocmd({ 'VimResized' }, {
   desc = 'Resize panes if window got resized',
   group = group,

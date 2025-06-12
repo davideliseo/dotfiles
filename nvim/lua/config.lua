@@ -3,6 +3,7 @@ vim.g.maplocalleader = ' '
 vim.wo.number = true
 vim.wo.relativenumber = true
 vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
 
 vim.o.ignorecase = true
 vim.o.smartcase = true

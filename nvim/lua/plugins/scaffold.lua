@@ -13,6 +13,22 @@ return {
     dependencies = { 'akinsho/toggleterm.nvim' },
   },
   {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    cmd = {
+        "LazyGit",
+        "LazyGitConfig",
+        "LazyGitCurrentFile",
+        "LazyGitFilter",
+        "LazyGitFilterCurrentFile",
+    },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+        { "<Leader>gg", "<cmd>LazyGit<cr>", desc = "Git client" },
+        { "<Leader>gf", "<cmd>LazyGitFilterCurrentFile<cr>", desc = "Git client, filter current file" }
+    },
+  },
+  {
     'kevinhwang91/nvim-bqf',
     ft = 'qf',
     opts = {

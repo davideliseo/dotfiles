@@ -13,7 +13,6 @@ return {
   },
   {
     'f-person/auto-dark-mode.nvim',
-    enabled = false,
     event = 'VeryLazy',
     config = {
       update_interval = 3000,
@@ -59,6 +58,7 @@ return {
     opts = {
       window = {
         backdrop = 0.95,
+        width = 120,
       },
       plugins = {
         tmux = { enabled = true }, -- 'true' disables tmux status bar

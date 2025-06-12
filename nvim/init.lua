@@ -20,7 +20,7 @@ local opts = {
     notify = false,
   },
   install = {
-    colorscheme = {'tokyonight-moon'},
+    colorscheme = {'tokyonight-night'},
   },
 }
 
