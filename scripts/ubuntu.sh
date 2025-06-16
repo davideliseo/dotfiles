@@ -103,6 +103,12 @@ asdf global nodejs 18.18.0;"
 # asdf install python latest;
 # asdf global python latest;"
 
+# ######
+# .NET #
+# ######
+sudo apt install -y dotnet-sdk-8.0 aspnetcore-runtime-8.0 dotnet-sdk-9.0 aspnetcore-runtime-9.0
+dotnet tool install --global dotnet-ef
+
 #######
 # CLI #
 brew install eza bat bottom trash-cli massren ripgrep sqlite3 lazygit
