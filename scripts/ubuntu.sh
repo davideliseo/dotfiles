@@ -19,6 +19,8 @@ mkdir -p $HOME/.config
 sudo apt update && sudo apt upgrade
 sudo apt install build-essential
 
+echo fs.inotify.max_user_instances=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
 ########
 # Brew #
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"

@@ -6,7 +6,7 @@ return {
       { '<Leader>fe', function() require('lf').start() end, desc = 'LF file manager' },
     },
     opts = {
-      escape_quit = true,
+      escape_quit = false,
       border = 'single',
       winblend = 0,
     },

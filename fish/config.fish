@@ -34,4 +34,4 @@ export VISUAL="nvim"
 export EDITOR="nvim"
 export FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT=1
 
-fish_add_path $PATH:/home/deliseo/.dotnet/tools
+fish_add_path /home/deliseo/.dotnet/tools
