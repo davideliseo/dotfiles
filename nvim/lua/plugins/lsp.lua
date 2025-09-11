@@ -189,6 +189,7 @@ return {
         init_options = {
           preferences = {
             importModuleSpecifierPreference = "shortest",
+            autoImportFileExcludePatterns = { "@radix-ui", "^next/router$", "next/dist", "^lucide-react/dist/lucide-react.suffixed$" }
           }
         }
       }
@@ -369,7 +370,7 @@ return {
     ---@module 'roslyn.config'
     ---@type RoslynNvimConfig
     opts = {
-      file_watching = "auto",
+      file_watching = "off",
       choose_target = nil,
       ignore_target = nil,
       broad_search = true,
@@ -402,6 +403,11 @@ return {
             dotnet_show_completion_items_from_unimported_namespaces = true,
             dotnet_show_name_completion_suggestions = true,
           },
+          ["csharp|formatting"] = {
+            csharp_indent_case_contents = true,
+            csharp_indent_case_contents_when_block = false,
+
+          }
         },
       },
     },
