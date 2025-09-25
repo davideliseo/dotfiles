@@ -75,10 +75,10 @@ return {
           completeopt = 'menu,menuone,noinsert',
         },
         mapping = {
-          ['<CR>'] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Insert,
-            select = true,
-          }),
+          -- ['<CR>'] = cmp.mapping.confirm({
+          --   behavior = cmp.ConfirmBehavior.Insert,
+          --   select = true,
+          -- }),
           ['<Tab>'] = cmp.mapping.confirm({ select = true }),
           ['<C-p>'] = cmp.mapping.complete({ reason = cmp.ContextReason.Auto }),
           ['<C-u>'] = cmp.mapping.scroll_docs(-4),
