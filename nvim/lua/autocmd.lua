@@ -47,7 +47,7 @@ autocmd('BufWritePre', {
     vim.lsp.buf.format({
       timeout_ms = 5000,
       filter = function(client)
-        return client.name == "null-ls"
+        return client.name == "ts_ls"
       end,
     })
   end,

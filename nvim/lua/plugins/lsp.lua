@@ -112,7 +112,7 @@ return {
             ['f'] = {
               function()
                 vim.lsp.buf.format({
-                  filter = function(client) return client.name ~= "tsserver" end,
+                  -- filter = function(client) return client.name ~= "tsserver" end,
                 })
               end,
               'Format buffer using LSP server',
@@ -165,17 +165,17 @@ return {
           -- end,
           lua_ls = function()
             local lua_opts = lsp_zero.nvim_lua_ls()
-            require('lspconfig').lua_ls.setup(lua_opts)
+            vim.lsp.config('lua_ls', lua_opts)
           end,
           angularls = function()
-            require('lspconfig').angularls.setup({
+            vim.lsp.config('angularls', {
               filetypes = { "angular", "typescript", "html", "typescriptreact", "typescript.tsx" }
             })
           end,
         },
       })
 
-      require('lspconfig').rust_analyzer.setup {
+      vim.lsp.config('rust_analyzer', {
         settings = {
           ["rust-analyzer"] = {
             rustfmt = {
@@ -183,18 +183,27 @@ return {
             },
           }
         }
-      }
+      })
 
-      require('lspconfig').ts_ls.setup {
+      vim.lsp.config('ts_ls', {
+        filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact" },
+        cmd = { "typescript-language-server", "--stdio" },
+        settings = {
+          implicitProjectConfiguration = {
+            checkJs = true,
+          },
+        },
         init_options = {
+          preferGoToSourceDefinition = true,
           preferences = {
-            importModuleSpecifierPreference = "shortest",
+            importModuleSpecifierPreference = "non-relative",
+            preferTypeOnlyAutoImports = true,
             autoImportFileExcludePatterns = { "@radix-ui", "^next/router$", "next/dist", "^lucide-react/dist/lucide-react.suffixed$" }
           }
         }
-      }
+      })
 
-      require('lspconfig').tailwindcss.setup({
+      vim.lsp.config('tailwindcss', {
         filetypes = {
           "angular", "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango",
           "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html",
@@ -224,6 +233,27 @@ return {
           },
         },
       })
+    end,
+  },
+  {
+    'mhartington/formatter.nvim',
+    lazy = false,
+    config = function()
+      require("formatter").setup {
+        logging = true,
+        filetype = {
+          typescriptreact = {
+            -- prettierd
+            function()
+              return {
+                exe = "prettierd",
+                args = { vim.api.nvim_buf_get_name(0) },
+                stdin = true
+              }
+            end
+          },
+        }
+      }
     end,
   },
   {
@@ -366,6 +396,7 @@ return {
   },
   {
     "seblyng/roslyn.nvim",
+    disabled = true,
     ft = "cs",
     ---@module 'roslyn.config'
     ---@type RoslynNvimConfig

@@ -32,6 +32,18 @@ return {
     event = 'VeryLazy',
   },
   {
+    "gregorias/coerce.nvim",
+    tag = 'v4.1.0',
+    config = true,
+    lazy = false,
+  },
+  {
+    'nvim-mini/mini.align',
+    version = false,
+    lazy = false,
+    config = true,
+  },
+  {
     "cshuaimin/ssr.nvim",
     keys = {
       {
