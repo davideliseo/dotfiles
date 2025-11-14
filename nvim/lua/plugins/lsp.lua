@@ -420,6 +420,7 @@ return {
             csharp_enable_inlay_hints_for_types = true,
             dotnet_enable_inlay_hints_for_indexer_parameters = true,
             dotnet_enable_inlay_hints_for_literal_parameters = true,
+
             dotnet_enable_inlay_hints_for_object_creation_parameters = true,
             dotnet_enable_inlay_hints_for_other_parameters = true,
             dotnet_enable_inlay_hints_for_parameters = true,

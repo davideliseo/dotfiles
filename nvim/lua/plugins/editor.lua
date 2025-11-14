@@ -28,6 +28,12 @@ return {
     dependencies = { { "tpope/vim-repeat" } },
   },
   {
+    "gregorias/coerce.nvim",
+    tag = 'v4.1.0',
+    config = true,
+    lazy = false
+  },
+  {
     'nvim-pack/nvim-spectre',
     event = 'VeryLazy',
   },
